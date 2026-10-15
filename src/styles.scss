@@ -1,0 +1,163 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/scss/app.scss";
+@import "ngx-toastr/toastr";
+
+.router-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: calc(100% - 47px);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+:host {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #60d7a9;
+}
+.boarderless-control {
+  border: none !important;
+  border-color: transparent !important;
+}
+.pointer {
+  cursor: pointer;
+}
+.dark-only {
+  .value-container {
+    color: #ffff !important;
+  }
+  .node-selected:after {
+    background-color: white !important;
+  }
+  .tree .node-value {
+    &:hover:after {
+      background-color: white !important;
+    }
+  }
+  .pointer {
+    cursor: pointer;
+  }
+}
+
+.card-body.p-0,
+.card-body.file-manager {
+  z-index: 2;
+}
+
+.fa,
+.btn {
+  cursor: pointer;
+}
+
+.flag-icon {
+  height: 40px;
+  position: relative;
+  left: 0px;
+  font-size: 3rem;
+}
+
+input.form-control {
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+sup.astrik {
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.table-responsive table th {
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.badge-success,
+.badge-warning {
+  border-radius: 1005px;
+  font-size: 12px;
+  text-transform: capitalize !important;
+  font-weight: 400;
+  padding: 10px 15px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #d8b465;
+  color: white;
+}
+
+.badge-approve,
+.badge-pending,
+.badge-rejected,
+.badge-blocked {
+  border-radius: 1005px;
+  font-size: 12px;
+  text-transform: capitalize !important;
+  font-weight: 400;
+  padding: 10px 15px;
+}
+
+.badge-approve {
+  background-color: #def7ec;
+  color: #11646d;
+}
+
+.badge-pending {
+  background-color: #fde8e8;
+  color: #a6202a;
+}
+
+.badge-rejected {
+  background-color: #f73164;
+  color: #fde8e8;
+}
+
+.badge-blocked {
+  background-color: #f73164;
+  color: #fde8e8;
+}
+
+.badge-true {
+  background-color: #28a745;
+  text-transform: capitalize;
+  font-size: 12px;
+  color: white;
+  border-radius: 30px;
+  padding: 5px 15px;
+}
+
+.badge-false {
+  background-color: #f73164;
+  text-transform: capitalize;
+  font-size: 12px;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 30px;
+}
+
+.badge-admin {
+  background-color: #fdf6b2;
+  color: #7d5257;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 5px 15px;
+}
+
+.badge-customer {
+  background-color: rgb(229, 237, 255);
+  color: #7551a2;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 5px 15px;
+}

@@ -1,0 +1,234 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5>Users</h5>
+            </div>
+            <div class="col-md-6 text-right">
+              <button *ngIf="canEdit" class="btn btn-primary" (click)="addNewUserFunction()">
+                Add New User
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <ngx-ui-loader [loaderId]="'loader-02'" fgsType="folding-cube"></ngx-ui-loader>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">User Name</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">Date of Birth</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Status</th>
+                  <th *ngIf="canEdit" scope="col" style="text-align: center">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="usersList.length > 0">
+                <tr *ngFor="let item of usersList; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item?.userName }}</td>
+                  <td>{{item.firstName}}</td>
+                  <td>{{item.lastName}}</td>
+                  <td>{{ item?.fullName }}</td>
+                  <td>{{item.dateOfBirth}}</td>
+                  <td>{{ item?.email }}</td>
+                  <td>
+                    <!-- {{ item?.isActive }} -->
+                    <span class="badge" [class.bg-success]="item.isActive" [class.bg-secondary]="!item.isActive">
+                      {{ item.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td class="text-center" *ngIf="canEdit">
+                    <span><i style="color: #4cdb4c" class="fa fa-edit" (click)="editThisUser(item)"></i></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5>Users</h5>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group m-0">
+                <input class="form-control" type="search" #value placeholder="Search.." [(ngModel)]="config.searchStr"
+                  (ngModelChange)="updateSearch(value.value)" />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button *ngIf="canEdit" class="btn btn-secondary" (click)="addNewUserFunction()">
+                Add New User
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <ngx-ui-loader [loaderId]="'loader-02'" fgsType="folding-cube"></ngx-ui-loader>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col" style="text-align: center">Status</th>
+                  <th *ngIf="canEdit" scope="col" style="text-align: center">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="usersList.length > 0">
+                <tr *ngFor="
+                    let item of usersList | filter : search;
+                    let i = index
+                  ">
+                  <td>{{ (config?.page - 1) * config?.pageSize + i + 1 }}</td>
+                  <td>
+                    {{ item?.username }}
+                    <span style="
+                        text-transform: lowercase;
+                        font-size: 11px;
+                        font-weight: 600;
+                      ">
+                      {{
+                      item?.isCurrentUser && item?.isSuperAdmin
+                      ? " (Me)"
+                      : item?.isSuperAdmin
+                      ? " (Owner)"
+                      : item?.isCurrentUser
+                      ? " (Me)"
+                      : ""
+                      }}</span>
+                  </td>
+                  <td>{{ item?.email }}</td>
+                  <td (click)="viewPermissions(item.role.id)" style="text-transform: capitalize">
+                    {{ item?.role?.name }}
+                  </td>
+                  <td style="text-align: center">
+                    <span [ngClass]="{
+                        'badge-green ': item?.status === 'approved',
+                        'badge-yellow': item?.status === 'pending',
+                        'badge-red': item?.status === 'rejected',
+                        'badge-red': item?.status === 'blocked'
+                      }">{{ item?.status }}
+                    </span>
+                  </td>
+                  <td *ngIf="canEdit">
+                    <span *ngIf="
+                        item?.isCurrentUser && item?.isSuperAdmin
+                          ? false
+                          : item?.isSuperAdmin
+                          ? false
+                          : item?.isCurrentUser
+                          ? false
+                          : true
+                      " style="
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        gap: 12px;
+                      ">
+                      <i style="color: #4cdb4c" class="fa fa-edit" (click)="editThisUser(item)"></i>
+                      <i (click)="confirmDeleteUser(item)" class="fa fa-trash" style="color: #f15b5b"></i></span>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="usersList?.length > 0">
+                <tr>
+                  <td style="vertical-align: middle" colspan="2">
+                    <div>
+                      Items per Page:
+                      <select (change)="handlePageSizeChange($event)">
+                        <option *ngFor="let size of pageSizes" [ngValue]="size">
+                          {{ size }}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                  <td colspan="2">
+                    <ngb-pagination class="d-flex justify-content-center" (pageChange)="pagination($event)"
+                      [collectionSize]="collectionSize" [rotate]="true" [boundaryLinks]="true" [maxSize]="5"
+                      [pageSize]="config.pageSize" [(page)]="config.page"></ngb-pagination>
+                  </td>
+                  <td *ngIf="canEdit" class="text-right" style="vertical-align: middle" colspan="2">
+                    Showing {{ usersList?.length }} items out of
+                    {{ usersList?.length }}
+                  </td>
+                  <td *ngIf="!canEdit" class="text-right" style="vertical-align: middle" colspan="1">
+                    Showing {{ usersList?.length }} items out of
+                    {{ usersList?.length }}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #rolesPermissions let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title">Role Permissions</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-bordered text-center">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">General Permissions</th>
+          <th scope="col">Edit</th>
+          <th scope="col">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let permission of permissionsWithTitles; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td style="text-align: left">
+            <b>{{ permission.moduleTitle }}</b> {{ permission.submoduleTitle }}
+          </td>
+          <td>
+            <i *ngIf="permission.canEdit" class="fa fa-check text-success" aria-hidden="true"></i>
+            <i *ngIf="!permission.canEdit" class="fa fa-times text-danger" aria-hidden="true"></i>
+          </td>
+          <td>
+            <i class="fa fa-check text-success" aria-hidden="true"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="d('Close click')">
+      Close
+    </button>
+  </div>
+</ng-template> -->

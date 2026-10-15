@@ -1,0 +1,819 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '../../shared/services/api.service';
+
+interface Customer {
+  id: number;
+  name: string;
+  phone: string;
+}
+
+interface SavedEntry {
+  localId: number;
+  referenceNo: string;
+  createdDate: string;
+  createdTime: string;
+
+  customerId: number;
+  customerName: string;
+
+  transactionCategory: 'RECEIVED' | 'GIVEN';
+  productType: string;
+
+  productDetails: any;
+
+  amount: number;
+  weight: number;
+
+  status: 'PENDING';
+}
+
+interface Product {
+  id: number;
+  name: string;
+  type: string;
+  isActive: boolean;
+}
+
+interface ProductBrand {
+  id: number;
+  productId: number;
+  name: string;
+  isActive: boolean;
+}
+
+interface ProductSku {
+  id: number;
+  productBrandId: number;
+  name: string;
+  weightInGM: number;
+  isActive: boolean;
+  makings: ProductMaking[];
+}
+
+interface ProductMaking {
+  id: number;
+  makingCharges: string;
+}
+
+@Component({
+  selector: 'app-sale-point',
+  templateUrl: './sale-point.component.html',
+  styleUrls: ['./sale-point.component.css'],
+})
+export class SalePointComponent implements OnInit {
+  transactionForm!: FormGroup;
+  customers: Customer[] = [
+    {
+      id: 1,
+      name: 'Waqas Guddi',
+      phone: '03001234567',
+    },
+    {
+      id: 2,
+      name: 'Ahmed Traders',
+      phone: '03111234567',
+    },
+    {
+      id: 3,
+      name: 'Muhammad Ali',
+      phone: '03221234567',
+    },
+    {
+      id: 4,
+      name: 'Khan Jewellers',
+      phone: '03331234567',
+    },
+  ];
+  productTypes = [
+    {
+      id: 0,
+      name: 'CASH',
+    },
+    {
+      id: 1,
+      name: 'PC',
+    },
+    {
+      id: 2,
+      name: 'LAB',
+    },
+    {
+      id: 3,
+      name: 'BAR',
+    },
+    {
+      id: 4,
+      name: 'COIN',
+    },
+    {
+      id: 5,
+      name: 'GINNI',
+    },
+    {
+      id: 6,
+      name: 'SILVER',
+    },
+  ];
+  savedEntries: SavedEntry[] = [];
+
+  isSubmitting = false;
+  successMessage = '';
+  errorMessage = '';
+  selectedProductId: number | null = null;
+
+  products: Product[] = [];
+  productBrands: ProductBrand[] = [];
+  productSkus: ProductSku[] = [];
+  filteredBrands: ProductBrand[] = [];
+  filteredSkus: ProductSku[] = [];
+  filteredMakings: ProductMaking[] = [];
+  selectedProduct: Product | null = null;
+  selectedBrand: ProductBrand | null = null;
+  selectedSku: ProductSku | null = null;
+  selectedMaking: ProductMaking | null = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private _toast: ToastrService,
+    private _apiService: ApiService,
+  ) {}
+
+  ngOnInit(): void {
+    this.createForm();
+    this.getAllProductsDetails();
+  }
+
+  createForm(): void {
+    this.transactionForm = this.fb.group({
+      createdDate: [
+        {
+          value: this.getCurrentDate(),
+          disabled: true,
+        },
+      ],
+
+      createdTime: [
+        {
+          value: this.getCurrentTime(),
+          disabled: true,
+        },
+      ],
+
+      referenceNo: [
+        {
+          value: this.generateReferenceNo(),
+          disabled: true,
+        },
+      ],
+
+      customerId: [null, Validators.required],
+
+      transactionCategory: [null, Validators.required],
+
+      productType: [null, Validators.required],
+
+      /* ================= CASH ================= */
+
+      cashCurrency: ['PKR'],
+
+      cashAmount: [null],
+
+      /* ================= PC ================= */
+
+      pcBrandId: [null],
+
+      pcQty: [null],
+
+      pcDiff: [null],
+
+      pcDiffAmount: [null],
+
+      pcWeight: [null],
+
+      pcTotalWeight: [null],
+
+      /* ================= LAB ================= */
+
+      labReport: [''],
+
+      labWeight: [null],
+
+      labPureWeight: [null],
+
+      labDiff: [null],
+
+      labDiffAmount: [null],
+
+      labTotalAmount: [null],
+
+      labTestingFeePW: [null],
+
+      labTestingFeeOA: [null],
+
+      labQty: [null],
+
+      /* ================= BAR ================= */
+
+      barBrand: [null],
+
+      barWeight: [null],
+
+      barQty: [null],
+
+      barMaking: [null],
+
+      barDiff: [null],
+
+      barTotalMaking: [null],
+
+      barTotalWeight: [null],
+
+      barTotalAmount: [null],
+
+      barDiscount: [null],
+
+      /* ================= COIN ================= */
+
+      coinBrand: [null],
+
+      coinWeight: [null],
+
+      coinQty: [null],
+
+      coinMaking: [null],
+
+      coinDiff: [null],
+
+      coinTotalAmount: [null],
+
+      coinTotalWeight: [null],
+
+      coinKarat: [null],
+
+      coinPureWeight: [null],
+
+      /* ================= GINNI ================= */
+
+      ginniWeight: [null],
+
+      ginniRefineAmount: [null],
+
+      ginniRefiningCharges: [null],
+
+      ginniReport: [''],
+
+      ginniPureWeight: [null],
+
+      ginniTotalAmount: [null],
+
+      ginniTotalWeight: [null],
+
+      /* ================= SILVER ================= */
+
+      silverBarBrand: [null],
+
+      silverBarWeight: [null],
+
+      silverRawalRod: [null],
+
+      silverQty: [null],
+
+      silverMakingPerUnit: [null],
+
+      silverTotalWeight: [null],
+
+      silverTotalAmount: [null],
+    });
+  }
+
+  getAllProductsDetails(): void {
+    this._apiService.getAllProductsWithBrandsAndSku().subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.products = response.data.products.filter(
+            (product: any) => product.isActive,
+          );
+          this.productBrands = response.data.brands.filter(
+            (brand: any) => brand.isActive,
+          );
+          this.productSkus = response.data.skus.filter(
+            (sku: any) => sku.isActive,
+          );
+        }
+      },
+      error: (error) => {
+        this._toast.error(error, 'Error fetching products');
+      },
+    });
+  }
+
+  // onProductChange(event: any): void {
+  //   const selectedProduct = event.id;
+  //   console.log('Selected Product Type:', selectedProduct);
+  // }
+
+  onProductChange(productName: number | string | null): void {
+    this.selectedProduct = null;
+
+    this.selectedBrand = null;
+    this.selectedSku = null;
+    this.selectedMaking = null;
+
+    this.filteredBrands = [];
+    this.filteredSkus = [];
+    this.filteredMakings = [];
+
+    if (!productName) {
+      return;
+    }
+
+    // const id = Number(productId);
+
+    this.selectedProduct =
+      this.products.find((product) => product.name === productName) || null;
+
+    if (!this.selectedProduct) {
+      return;
+    }
+
+    // Get brands belonging to selected product
+    this.filteredBrands = this.productBrands.filter(
+      (brand) => brand.productId === this.selectedProduct!.id && brand.isActive,
+    );
+  }
+
+  onBrandChange(brandId: number | string | null): void {
+    this.selectedBrand = null;
+
+    this.selectedSku = null;
+    this.selectedMaking = null;
+
+    this.filteredSkus = [];
+    this.filteredMakings = [];
+
+    if (!brandId) {
+      return;
+    }
+
+    const id = Number(brandId);
+
+    this.selectedBrand =
+      this.filteredBrands.find((brand) => brand.id === id) || null;
+
+    if (!this.selectedBrand) {
+      return;
+    }
+
+    // Get SKUs belonging to selected brand
+    this.filteredSkus = this.productSkus.filter(
+      (sku) => sku.productBrandId === this.selectedBrand!.id && sku.isActive,
+    );
+  }
+
+  onSkuChange(skuId: number | string | null): void {
+    this.selectedSku = null;
+    this.selectedMaking = null;
+
+    this.filteredMakings = [];
+
+    if (!skuId) {
+      return;
+    }
+
+    const id = Number(skuId);
+
+    this.selectedSku = this.filteredSkus.find((sku) => sku.id === id) || null;
+
+    if (!this.selectedSku) {
+      return;
+    }
+
+    // Get making charges for selected SKU
+    this.filteredMakings =
+      this.selectedSku.makings?.filter((making) => making != null) || [];
+  }
+
+  onMakingChange(makingId: number | string | null): void {
+    this.selectedMaking = null;
+
+    if (!makingId) {
+      return;
+    }
+
+    const id = Number(makingId);
+
+    this.selectedMaking =
+      this.filteredMakings.find((making) => making.id === id) || null;
+  }
+
+  get productType(): string {
+    return this.transactionForm.get('productType')?.value;
+  }
+
+  get selectedCustomer(): Customer | undefined {
+    const customerId = this.transactionForm.get('customerId')?.value;
+
+    return this.customers.find(
+      (customer) => customer.id === Number(customerId),
+    );
+  }
+
+  saveEntry(): void {
+    this.clearMessages();
+
+    if (this.transactionForm.get('customerId')?.invalid) {
+      this.transactionForm.get('customerId')?.markAsTouched();
+      this._toast.error('Please select a customer.');
+      return;
+    }
+
+    if (this.transactionForm.get('transactionCategory')?.invalid) {
+      this._toast.error('Please select transaction category.');
+      return;
+    }
+
+    if (this.transactionForm.get('productType')?.invalid) {
+      this._toast.error('Please select product type.');
+      return;
+    }
+
+    const customer = this.selectedCustomer;
+
+    if (!customer) {
+      this._toast.error('Selected customer not found.');
+      return;
+    }
+
+    const entry: SavedEntry = {
+      localId: Date.now(),
+
+      referenceNo: this.transactionForm.getRawValue().referenceNo,
+
+      createdDate: this.transactionForm.getRawValue().createdDate,
+
+      createdTime: this.transactionForm.getRawValue().createdTime,
+
+      customerId: customer.id,
+
+      customerName: customer.name,
+
+      transactionCategory: this.transactionForm.get('transactionCategory')
+        ?.value,
+
+      productType: this.productType,
+
+      productDetails: this.getProductDetails(),
+
+      amount: this.getCurrentAmount(),
+
+      weight: this.getCurrentWeight(),
+
+      status: 'PENDING',
+    };
+    this.savedEntries.push(entry);
+    this._toast.success(`${this.productType} entry saved to customer ledger.`);
+    this.prepareNextEntry();
+  }
+
+  getProductDetails(): any {
+    const form = this.transactionForm.getRawValue();
+
+    switch (this.productType) {
+      case 'CASH':
+        return {
+          currency: form.cashCurrency,
+
+          amount: form.cashAmount,
+        };
+
+      case 'PC':
+        return {
+          brand: form.pcBrand,
+
+          qty: form.pcQty,
+
+          diff: form.pcDiff,
+
+          diffAmount: form.pcDiffAmount,
+
+          weight: form.pcWeight,
+
+          totalWeight: form.pcTotalWeight,
+        };
+
+      case 'LAB':
+        return {
+          report: form.labReport,
+
+          weight: form.labWeight,
+
+          pureWeight: form.labPureWeight,
+
+          diff: form.labDiff,
+
+          diffAmount: form.labDiffAmount,
+
+          totalAmount: form.labTotalAmount,
+
+          testingFeePW: form.labTestingFeePW,
+
+          testingFeeOA: form.labTestingFeeOA,
+
+          qty: form.labQty,
+        };
+
+      case 'BAR':
+        return {
+          brand: form.barBrand,
+
+          barWeight: form.barWeight,
+
+          qty: form.barQty,
+
+          making: form.barMaking,
+
+          diff: form.barDiff,
+
+          totalMaking: form.barTotalMaking,
+
+          totalWeight: form.barTotalWeight,
+
+          totalAmount: form.barTotalAmount,
+
+          discount: form.barDiscount,
+        };
+
+      case 'COIN':
+        return {
+          brand: form.coinBrand,
+
+          coinWeight: form.coinWeight,
+
+          qty: form.coinQty,
+
+          making: form.coinMaking,
+
+          diff: form.coinDiff,
+
+          totalAmount: form.coinTotalAmount,
+
+          totalWeight: form.coinTotalWeight,
+
+          karat: form.coinKarat,
+
+          pureWeight: form.coinPureWeight,
+        };
+
+      case 'GINNI':
+        return {
+          ginniWeight: form.ginniWeight,
+
+          refineAmount: form.ginniRefineAmount,
+
+          refiningCharges: form.ginniRefiningCharges,
+
+          report: form.ginniReport,
+
+          pureWeight: form.ginniPureWeight,
+
+          totalAmount: form.ginniTotalAmount,
+
+          totalWeight: form.ginniTotalWeight,
+        };
+
+      case 'SILVER':
+        return {
+          barBrand: form.silverBarBrand,
+
+          barWeight: form.silverBarWeight,
+
+          rawalRod: form.silverRawalRod,
+
+          qty: form.silverQty,
+
+          makingPerUnit: form.silverMakingPerUnit,
+
+          totalWeight: form.silverTotalWeight,
+
+          totalAmount: form.silverTotalAmount,
+        };
+
+      default:
+        return {};
+    }
+  }
+
+  getCurrentAmount(): number {
+    const form = this.transactionForm.getRawValue();
+
+    switch (this.productType) {
+      case 'CASH':
+        return Number(form.cashAmount || 0);
+
+      case 'LAB':
+        return Number(form.labTotalAmount || 0);
+
+      case 'BAR':
+        return Number(form.barTotalAmount || 0);
+
+      case 'COIN':
+        return Number(form.coinTotalAmount || 0);
+
+      case 'GINNI':
+        return Number(form.ginniTotalAmount || 0);
+
+      case 'SILVER':
+        return Number(form.silverTotalAmount || 0);
+
+      default:
+        return 0;
+    }
+  }
+
+  getCurrentWeight(): number {
+    const form = this.transactionForm.getRawValue();
+
+    switch (this.productType) {
+      case 'PC':
+        return Number(form.pcTotalWeight || 0);
+
+      case 'LAB':
+        return Number(form.labWeight || 0);
+
+      case 'BAR':
+        return Number(form.barTotalWeight || 0);
+
+      case 'COIN':
+        return Number(form.coinTotalWeight || 0);
+
+      case 'GINNI':
+        return Number(form.ginniTotalWeight || 0);
+
+      case 'SILVER':
+        return Number(form.silverTotalWeight || 0);
+
+      default:
+        return 0;
+    }
+  }
+
+  prepareNextEntry(): void {
+    const customerId = this.transactionForm.get('customerId')?.value;
+    const category = this.transactionForm.get('transactionCategory')?.value;
+    const productType = this.transactionForm.get('productType')?.value;
+
+    this.createForm();
+
+    this.transactionForm.patchValue({
+      customerId: customerId,
+      transactionCategory: category,
+      productType: productType,
+    });
+  }
+
+  removeEntry(localId: number): void {
+    this.savedEntries = this.savedEntries.filter(
+      (entry) => entry.localId !== localId,
+    );
+  }
+
+  submitEntries(): void {
+    this.clearMessages();
+
+    if (this.savedEntries.length === 0) {
+      this._toast.error('Please save at least one entry before submitting.');
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const payload = {
+      submittedAt: new Date().toISOString(),
+
+      totalEntries: this.savedEntries.length,
+
+      entries: this.savedEntries.map((entry) => ({
+        referenceNo: entry.referenceNo,
+        createdDate: entry.createdDate,
+        createdTime: entry.createdTime,
+        customerId: entry.customerId,
+        customerName: entry.customerName,
+        transactionCategory: entry.transactionCategory,
+        productType: entry.productType,
+        productDetails: entry.productDetails,
+      })),
+    };
+
+    console.log('SUBMIT PAYLOAD:', payload);
+
+    /*
+      Replace this URL with your actual NestJS API.
+    */
+
+    // this.http.post(this.submitApiUrl, payload).subscribe({
+    //   next: (response) => {
+    //     console.log('Submit response:', response);
+
+    //     this.successMessage = 'All transaction entries submitted successfully.';
+
+    //     /*
+    //         Clear local array only after
+    //         successful API response.
+    //       */
+
+    //     this.savedEntries = [];
+
+    //     this.isSubmitting = false;
+    //   },
+
+    //   error: (error) => {
+    //     console.error('Submit error:', error);
+
+    //     this.errorMessage = 'Unable to submit transaction. Please try again.';
+
+    //     /*
+    //         IMPORTANT:
+    //         Do NOT clear savedEntries
+    //         when API fails.
+    //       */
+
+    //     this.isSubmitting = false;
+    //   },
+    // });
+  }
+
+  get totalReceived(): number {
+    return this.savedEntries
+
+      .filter((entry) => entry.transactionCategory === 'RECEIVED')
+
+      .reduce((total, entry) => total + entry.amount, 0);
+  }
+
+  get totalGiven(): number {
+    return this.savedEntries
+
+      .filter((entry) => entry.transactionCategory === 'GIVEN')
+
+      .reduce((total, entry) => total + entry.amount, 0);
+  }
+
+  get totalReceivedWeight(): number {
+    return this.savedEntries
+
+      .filter((entry) => entry.transactionCategory === 'RECEIVED')
+
+      .reduce((total, entry) => total + entry.weight, 0);
+  }
+
+  get totalGivenWeight(): number {
+    return this.savedEntries
+
+      .filter((entry) => entry.transactionCategory === 'GIVEN')
+
+      .reduce((total, entry) => total + entry.weight, 0);
+  }
+
+  get balance(): number {
+    return this.totalReceived - this.totalGiven;
+  }
+
+  get weightBalance(): number {
+    return this.totalReceivedWeight - this.totalGivenWeight;
+  }
+
+  getCurrentDate(): string {
+    const date = new Date();
+
+    return date.toISOString().split('T')[0];
+  }
+
+  getCurrentTime(): string {
+    const date = new Date();
+
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  generateReferenceNo(): string {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const random = Math.floor(10000 + Math.random() * 90000);
+
+    return `SP-${year}${month}${day}-${random}`;
+  }
+
+  clearMessages(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+  }
+}

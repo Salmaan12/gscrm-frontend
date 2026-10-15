@@ -1,0 +1,129 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h5>Customers</h5>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group m-0">
+                <input
+                  class="form-control"
+                  type="search"
+                  #value
+                  placeholder="Search.."
+                  [(ngModel)]="config.searchStr"
+                  (ngModelChange)="updateSearch(value.value)"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12 text-right">
+              <button
+                *ngIf="canEdit"
+                class="btn btn-primary"
+                (click)="addNewCustomerFunction()"
+              >
+                Add New Customer
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <ngx-ui-loader
+            [loaderId]="'loader-02'"
+            fgsType="folding-cube"
+          ></ngx-ui-loader>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Primary Phone</th>
+                  <th scope="col">Secondary Phone</th>
+                  <th scope="col">CNIC</th>
+                  <th scope="col">Refine Charges</th>
+                  <th scope="col">Difference Charges</th>
+                  <th scope="col">Status</th>
+                  <th *ngIf="canEdit" scope="col" style="text-align: center">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngIf="customersList.length > 0">
+                <tr *ngFor="let item of customersList; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item?.customerName }}</td>
+                  <td>{{ item.primaryPhone }}</td>
+                  <td>{{ item.secondaryPhone }}</td>
+                  <td>{{ item?.cnic }}</td>
+                  <td>{{ item.refineCharges }}</td>
+                  <td>{{ item?.diffCharges }}</td>
+                  <td>
+                    <!-- {{ item?.isActive }} -->
+                    <span
+                      class="badge"
+                      [class.bg-success]="item.isActive"
+                      [class.bg-secondary]="!item.isActive"
+                    >
+                      {{ item.isActive ? "Active" : "Inactive" }}
+                    </span>
+                  </td>
+                  <td class="text-center" *ngIf="canEdit">
+                    <span
+                      ><i
+                        style="color: #4cdb4c"
+                        class="fa fa-edit"
+                        (click)="editThisCustomer(item)"
+                      ></i
+                    ></span>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="customersList.length > 0">
+                <tr>
+                  <td colspan="3" style="vertical-align: middle">
+                    <div>
+                      Items per Page:
+                      <select (change)="handlePageSizeChange($event)">
+                        <option *ngFor="let size of pageSizes" [ngValue]="size">
+                          {{ size }}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                  <td colspan="3">
+                    <ngb-pagination
+                      class="d-flex justify-content-center"
+                      (pageChange)="pagination($event)"
+                      [collectionSize]="collectionSize"
+                      [rotate]="true"
+                      [boundaryLinks]="true"
+                      [maxSize]="5"
+                      [pageSize]="config.pageSize"
+                      [(page)]="config.page"
+                    ></ngb-pagination>
+                  </td>
+                  <td
+                    colspan="4"
+                    class="text-right"
+                    style="vertical-align: middle"
+                  >
+                    Showing {{ countListData }} items out of
+                    {{ collectionSize }}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

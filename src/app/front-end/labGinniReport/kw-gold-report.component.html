@@ -1,0 +1,116 @@
+<div class="kw-body">
+  <div class="report-page" #pageRef>
+    <div class="header">
+      <div class="header-left">
+        <div class="company-name">KW<sup style="font-size:22px">TM</sup></div>
+        <div class="company-tagline">Gold &amp; Silver Testing Laboratory</div>
+      </div>
+      <div class="header-center">
+        <img [src]="logoPath" alt="KW Logo" class="logo" style="width:100px;height:75px;margin-top:-20px" />
+      </div>
+      <div class="header-right">
+        <div class="urdu-text">کے ڈبلیو</div>
+        <div class="urdu-tagline">گولڈ اینڈ سلور ٹیسٹنگ لیبارٹری</div>
+      </div>
+    </div>
+
+    <div class="top-info">
+      <span>DATE: <input type="date" name="reportDate" [(ngModel)]="form.reportDate" /></span>
+      <span>Reference NO: <input type="text" name="referenceNo" [(ngModel)]="form.referenceNo" style="width:140px" placeholder="Enter reference number" /></span>
+    </div>
+
+    <div class="report-title">Gold Testing Report</div>
+
+    <div class="main-content">
+      <div class="client-section">
+        <div class="section-title">Client</div>
+        <div class="field-row">
+          <div class="field-label">Name:</div>
+          <input class="field-value" type="text" name="clientName" [(ngModel)]="form.clientName" placeholder="Enter client name" />
+        </div>
+        <div class="field-row" *ngIf="form.customerCNIC">
+          <div class="field-label">CNIC:</div>
+          <input class="field-value" type="text" name="customerCNIC" [(ngModel)]="form.customerCNIC" placeholder="Enter cnic" />
+        </div>
+        <div class="field-row">
+          <div class="field-label">Number:</div>
+          <input class="field-value" type="text" name="clientNumber" [(ngModel)]="form.clientNumber" placeholder="Enter client number" />
+        </div>
+      </div>
+
+      <div class="sample-section">
+        <div class="section-title">Sample Identification</div>
+        <div class="company-info-box">
+          <div class="kw-logo-small">KW<sup>TM</sup></div>
+          <div style="font-weight:bold;font-size:10px">Gold &amp; Silver Testing Laboratory</div>
+          <div>TEL: 021-34806318, 021-34856018, 021-3685037</div>
+          <div>MOBILE: 0333-3188888</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="client-section">
+        <div class="field-row">
+          <div class="field-label">Report:</div>
+          <input class="field-value" type="text" name="reportNumber" [(ngModel)]="form.reportNumber" placeholder="Enter report number" />
+        </div>
+        <div class="field-row">
+          <div class="field-label">Weight:</div>
+          <input class="field-value" type="number" name="weight" [(ngModel)]="form.weight" placeholder="Enter weight" step="0.01" />
+        </div>
+        <div class="field-row">
+          <div class="field-label">Pure Weight:</div>
+          <input class="field-value" type="number" name="silverPct" [(ngModel)]="form.silverPct" placeholder="xxxxx" step="0.01" />
+        </div>
+      </div>
+
+      <div class="sample-section">
+        <div class="right-card">
+          <div class="card-title">KW<sup>TM</sup><div class="card-sub">Gold &amp; Silver Testing Laboratory</div></div>
+          <div class="card-row">SERIAL NO: {{ form.referenceNo || ' ' }}</div>
+          <div class="card-row">TEL NO: 021-34806318</div>
+          <div class="card-row">MOBILE: 0333-3188888</div>
+          <div class="card-box"><div class="box-cell"></div><div class="box-cell"></div></div>
+        </div>
+        <div class="disclaimer">
+          We are not responsible if the Gold is not taken back.
+          <span class="disclaimer-urdu">اگر سونا واپس نہیں لیا جاتا تو ہم اس کے ذمہ دار نہیں ہیں</span>
+          KW Lab is not responsible for this analysis
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-use-only">LAB USE ONLY</div>
+
+    <div class="test-method">
+      <div class="method-box">
+        <div class="method-title">TEST METHOD NAME</div>
+        <div class="method-name">GOLD ALLOYS DETERMINATION</div>
+      </div>
+      <div class="method-box">
+        <div class="method-title">ANALYTICAL METHOD USED</div>
+        <div class="method-name">FIRE ASSAY / AQUA REGIA DEGESTION</div>
+      </div>
+    </div>
+
+    <div class="tested-by">
+      <div class="tested-box">
+        <div class="tested-title">TESTED BY</div>
+        <div class="tested-name">KW LAB</div>
+      </div>
+      <div class="ceo-box">
+        <div class="ceo-title">KW<sup style="font-size:12px">TM</sup></div>
+        <div class="ceo-subtitle">GOLD &amp; SILVER LABORATORY</div>
+        <div class="ceo-subtitle">CEO</div>
+      </div>
+    </div>
+
+    <div class="footer">"Thank you for your trust in KW Gold &amp; Silver Testing Laboratory"</div>
+  </div>
+
+  <div class="button-container">
+    <button type="button" class="btn-pdf" (click)="handlePDF()">📄 PDF</button>
+    <button type="button" class="btn-print" (click)="handlePrint()">🖨️ Print</button>
+  </div>
+</div>

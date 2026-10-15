@@ -1,0 +1,1574 @@
+<div class="container-fluid">
+  <!-- ========================================================= -->
+  <!-- TRANSACTION INFORMATION -->
+  <!-- ========================================================= -->
+
+  <div class="card mt-2">
+    <div class="card-header">
+      <h5>Transaction Information</h5>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="salePointForm">
+        <div class="row">
+          <!-- Created Date -->
+
+          <div class="form-group col-sm-12 col-md-3">
+            <label class="col-form-label pt-0"> Created Date </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="createdDate"
+              readonly
+            />
+          </div>
+
+          <!-- Created Time -->
+
+          <div class="form-group col-sm-12 col-md-3">
+            <label class="col-form-label pt-0"> Created Time </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="createdTime"
+              readonly
+            />
+          </div>
+
+          <!-- Reference -->
+
+          <div class="form-group col-sm-12 col-md-3">
+            <label class="col-form-label pt-0"> Reference No. </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="referenceNo"
+              readonly
+            />
+          </div>
+
+          <!-- Customer -->
+
+          <div class="form-group col-sm-12 col-md-3">
+            <label class="col-form-label">
+              Customer
+
+              <sup class="astrik"> * </sup>
+            </label>
+
+            <ng-select
+              [items]="customers"
+              bindLabel="customerName"
+              bindValue="id"
+              placeholder="Select Customer"
+              formControlName="customerId"
+              (change)="onCustomerChange($event?.id)"
+            >
+            </ng-select>
+          </div>
+
+          <!-- Buy Rate -->
+
+          <div class="form-group col-md-6">
+            <label class="col-form-label">
+              Buy Rate (Today)
+
+              <sup class="astrik"> * </sup>
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="buyRateAmount"
+              placeholder="Enter Amount"
+              onlyNumbers
+            />
+          </div>
+
+          <!-- Sell Rate -->
+
+          <div class="form-group col-md-6">
+            <label class="col-form-label">
+              Sell Rate (Today)
+
+              <sup class="astrik"> * </sup>
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              formControlName="sellRateAmount"
+              placeholder="Enter Amount"
+              onlyNumbers
+            />
+          </div>
+        </div>
+
+        <!-- PRODUCT TYPE -->
+
+        <div class="row">
+          <div class="form-group col-sm-12">
+            <label class="col-form-label pt-0 d-block">
+              Product Type
+
+              <sup class="astrik"> * </sup>
+            </label>
+
+            <div class="product-type-group">
+              <ng-container *ngFor="let product of products">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  [id]="'productType_' + product.id"
+                  [value]="product.name"
+                  formControlName="productType"
+                  (change)="onProductChange(product.id)"
+                />
+
+                <label
+                  class="product-type-item"
+                  [for]="'productType_' + product.id"
+                >
+                  {{ product.name }}
+                </label>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- RECEIVED + GIVEN -->
+  <!-- ========================================================= -->
+
+  <div class="row mt-3" *ngIf="selectedProduct">
+    <!-- PRODUCT HEADER -->
+
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>
+            {{ $any(selectedProduct)?.name }}
+            details
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- RECEIVED -->
+    <!-- ======================================================= -->
+
+    <div class="col-12 col-xl-6">
+      <div class="card transaction-card received-card">
+        <div class="card-header transaction-card-header">
+          <h5>Received</h5>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="receivedForm">
+            <!-- ================================================= -->
+            <!-- CASH -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Cash'">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label class="col-form-label"> Amount <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCashAmount"
+                    placeholder="Enter Amount"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCashWeight"
+                    placeholder="Enter Weight In GRAM"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Diff <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCashDiff"
+                    placeholder="Enter Diff"
+                    required
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- LAB -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'LAB'">
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label class="col-form-label">
+                    Report <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="receivedLabReport"
+                    placeholder="Enter Report"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label class="col-form-label">
+                    Weight <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedLabWeight"
+                    placeholder="Enter Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label class="col-form-label">
+                    Pure Weight <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedLabPureWeight"
+                    placeholder="Enter Pure Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label class="col-form-label">
+                    Total Amount
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedLabTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- PC -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'PC'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="receivedPcBrandId"
+                    required
+                    (change)="onBrandChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="receivedPcSkuId"
+                    required
+                    (change)="onSkuChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedPcWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Difference </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedPcDiff"
+                    placeholder="Enter Difference"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedPcQty"
+                    placeholder="Enter Qty"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedPcTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- BAR -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Bar'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="receivedBarBrandId"
+                    required
+                    (change)="onBrandChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="receivedBarSkuId"
+                    required
+                    (change)="onSkuChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedBarWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedBarQty"
+                    placeholder="Enter Qty"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedBarMaking"
+                    placeholder="Enter Making"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedBarTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- COIN -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Coin'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="receivedCoinBrandId"
+                    required
+                    (change)="onBrandChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="receivedCoinSkuId"
+                    required
+                    (change)="onSkuChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinQty"
+                    placeholder="Enter Qty"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinMaking"
+                    placeholder="Enter Making"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Karat <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinKarat"
+                    placeholder="Enter Karat"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Pure Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinPureWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedCoinTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- GINNI -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Ginni'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Ginni Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedGinniWeight"
+                    placeholder="Enter Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label">
+                    Report <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="receivedGinniReport"
+                    placeholder="Enter Report"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Pure Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedGinniPureWeight"
+                    placeholder="Enter Pure Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Refining Charges </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedGinniRefiningCharges"
+                    placeholder="Enter Charges"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedGinniTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- SILVER -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Silver'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="receivedSilverBrandId"
+                    (change)="onBrandChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="receivedSilverSkuId"
+                    (change)="onSkuChange($event?.id, 'RECEIVED')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedSilverWeight"
+                    placeholder="Enter Weight"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedSilverQty"
+                    placeholder="Enter Qty"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="receivedSilverMaking"
+                    placeholder="Enter Making"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- SAVE RECEIVED -->
+
+            <div class="mt-3 d-flex justify-content-between">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="saveEntry('RECEIVED')"
+              >
+                <i class="fa fa-save me-1"></i>
+
+                Save Received
+              </button>
+
+              <ng-container
+                *ngIf="
+                  selectedProduct.name === 'LAB' ||
+                  selectedProduct.name === 'Ginni'
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="viewReport('RECEIVED')"
+                >
+                  <i class="fa fa-file me-1"></i>
+
+                  View Report
+                </button>
+              </ng-container>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- GIVEN -->
+    <!-- ======================================================= -->
+
+    <div class="col-12 col-xl-6">
+      <div class="card transaction-card given-card">
+        <div class="card-header transaction-card-header">
+          <h5>Given</h5>
+        </div>
+
+        <div class="card-body">
+          <form [formGroup]="givenForm">
+            <!-- ================================================= -->
+            <!-- CASH -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Cash'">
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label class="col-form-label"> Amount <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCashAmount"
+                    placeholder="Enter Amount"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCashWeight"
+                    placeholder="Enter Weight In GRAM"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Diff <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCashDiff"
+                    placeholder="Enter Diff"
+                    required
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- LAB -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'LAB'">
+              <div class="row">
+                <div class="form-group col-md-4">
+                  <label class="col-form-label"> Report <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="givenLabReport"
+                    placeholder="Enter Report"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label class="col-form-label">
+                    Weight <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenLabWeight"
+                    placeholder="Enter Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-4">
+                  <label class="col-form-label">
+                    Pure Weight <sup class="astrik">*</sup>
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenLabPureWeight"
+                    placeholder="Enter Pure Weight"
+                    required
+                  />
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label class="col-form-label">
+                    Total Amount
+                  </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenLabTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- PC -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'PC'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="givenPcBrandId"
+                    (change)="onBrandChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="givenPcSkuId"
+                    (change)="onSkuChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenPcWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Difference </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenPcDiff"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenPcQty"
+                    placeholder="Enter Qty"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenPcTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- BAR -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Bar'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="givenBarBrandId"
+                    (change)="onBrandChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="givenBarSkuId"
+                    (change)="onSkuChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenBarWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenBarQty"
+                    placeholder="Enter Qty"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenBarMaking"
+                    placeholder="Enter Making"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenBarTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- COIN -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Coin'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="givenCoinBrandId"
+                    (change)="onBrandChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="givenCoinSkuId"
+                    (change)="onSkuChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinQty"
+                    placeholder="Enter Qty"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinMaking"
+                    placeholder="Enter Making"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Karat <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinKarat"
+                    placeholder="Enter Karat"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Pure Weight (GM) </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinPureWeight"
+                    readonly
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenCoinTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- GINNI -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Ginni'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Ginni Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenGinniWeight"
+                    placeholder="Enter Weight"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Report <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="givenGinniReport"
+                    placeholder="Enter Report"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Pure Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenGinniPureWeight"
+                    placeholder="Enter Pure Weight"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Refining Charges </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenGinniRefiningCharges"
+                    placeholder="Enter Charges"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Total Amount </label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenGinniTotalAmount"
+                    placeholder="Enter Total Amount"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- ================================================= -->
+            <!-- SILVER -->
+            <!-- ================================================= -->
+
+            <ng-container *ngIf="selectedProduct.name === 'Silver'">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Brand <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredBrands"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select Brand"
+                    formControlName="givenSilverBrandId"
+                    (change)="onBrandChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> SKU <sup class="astrik">*</sup></label>
+
+                  <ng-select
+                    [items]="filteredSkus"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Select SKU"
+                    formControlName="givenSilverSkuId"
+                    (change)="onSkuChange($event?.id, 'GIVEN')"
+                  >
+                  </ng-select>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Weight <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenSilverWeight"
+                    placeholder="Enter Weight"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Qty <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenSilverQty"
+                    placeholder="Enter Qty"
+                  />
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label class="col-form-label"> Making <sup class="astrik">*</sup></label>
+
+                  <input
+                    type="text"
+                    onlyNumbers
+                    class="form-control"
+                    formControlName="givenSilverMaking"
+                    placeholder="Enter Making"
+                  />
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- SAVE GIVEN -->
+
+            <div class="mt-3 d-flex justify-content-between">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="saveEntry('GIVEN')"
+              >
+                <i class="fa fa-save me-1"></i>
+
+                Save Given
+              </button>
+              <ng-container
+                *ngIf="
+                  selectedProduct.name === 'LAB' ||
+                  selectedProduct.name === 'Ginni'
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="viewReport('GIVEN')"
+                >
+                  <i class="fa fa-file me-1"></i>
+
+                  View Report
+                </button>
+              </ng-container>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- CUSTOMER LEDGER -->
+  <!-- ========================================================= -->
+
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Customer Sales Data</h5>
+
+      <span
+        *ngIf="selectedCustomer"
+        class="badge bg-primary font-bold"
+        style="color: #fff"
+      >
+        {{ selectedCustomer.customerName }}
+      </span>
+    </div>
+
+    <div class="card-body">
+      <!-- EMPTY STATE -->
+
+      <div
+        *ngIf="savedEntries.length === 0"
+        class="text-center py-4 text-muted"
+      >
+        <i class="fa fa-file-text-o fs-3 mb-2"></i>
+
+        <p class="mb-0">No transaction entries added yet.</p>
+
+        <small>
+          Save a Received or Given entry to add it to the customer ledger.
+        </small>
+      </div>
+
+      <!-- LEDGER -->
+
+      <div class="table-responsive" *ngIf="savedEntries.length > 0">
+        <table class="table table-bordered table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+
+              <th>Reference No.</th>
+
+              <th>Date</th>
+
+              <th>Time</th>
+
+              <th>Buy/Sell Rate</th>
+
+              <th>Product</th>
+
+              <th>Category</th>
+
+              <th class="text-end">Weight</th>
+
+              <th class="text-end">Amount</th>
+
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let entry of savedEntries; let i = index">
+              <td>
+                {{ i + 1 }}
+              </td>
+
+              <td>
+                <strong>
+                  {{ entry.referenceNo }}
+                </strong>
+              </td>
+
+              <td>
+                {{ entry.createdDate }}
+              </td>
+
+              <td>
+                {{ entry.createdTime }}
+              </td>
+
+              <td>{{ entry.rate }}</td>
+
+              <td>
+                <span class="badge bg-secondary">
+                  <!-- {{ entry.productType }} -->
+                  {{ getProductType(entry) }}
+                </span>
+                <span
+                  class="badge bg-info"
+                  *ngIf="entry.productType === 'Coin'"
+                >
+                  {{ entry.karat }} Karat
+                </span>
+              </td>
+
+              <td>
+                <span
+                  *ngIf="entry.transactionCategory === 'RECEIVED'"
+                  class="badge bg-success"
+                >
+                  ↓ Received
+                </span>
+
+                <span
+                  *ngIf="entry.transactionCategory === 'GIVEN'"
+                  class="badge bg-danger"
+                >
+                  ↑ Given
+                </span>
+              </td>
+
+              <td class="text-end">
+                <!-- {{ entry.weight | number: "1.2-3" }} -->
+                <!-- (['COIN', 'LAB', 'GINNI'].includes(entry.productType?.toUpperCase())
+                    ? entry.pureWeight
+                    : entry.weight) | number: '1.2-3' -->
+                {{ getEntryWeightMarkup(entry) | number: "1.2-3" }}
+              </td>
+
+              <td class="text-end">
+                {{ entry.amount | number: "1.2-2" }}
+              </td>
+
+              <td class="text-center">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  title="Remove Entry"
+                  (click)="removeEntry(entry.localId)"
+                >
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- TOTALS -->
+
+          <tfoot>
+            <!-- RECEIVED -->
+
+            <tr class="table-success">
+              <td colspan="7" class="text-end">
+                <strong> Total Received </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ totalReceivedWeight | number: "1.2-3" }}
+                </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ totalReceived | number: "1.2-2" }}
+                </strong>
+              </td>
+
+              <td></td>
+            </tr>
+
+            <!-- GIVEN -->
+
+            <tr class="table-danger">
+              <td colspan="7" class="text-end">
+                <strong> Total Given </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ totalGivenWeight | number: "1.2-3" }}
+                </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ totalGiven | number: "1.2-2" }}
+                </strong>
+              </td>
+
+              <td></td>
+            </tr>
+
+            <!-- BALANCE -->
+
+            <tr class="table-warning">
+              <td colspan="7" class="text-end">
+                <strong> Balance </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ weightBalance | number: "1.2-3" }}
+                </strong>
+              </td>
+
+              <td class="text-end">
+                <strong>
+                  {{ balance | number: "1.2-2" }}
+                </strong>
+              </td>
+
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- FINAL ACTIONS -->
+  <!-- ========================================================= -->
+
+  <div class="d-flex justify-content-end mt-4 mb-4">
+    <button
+      type="button"
+      class="btn btn-info ml-2"
+      [disabled]="isSubmitting || savedEntries.length === 0"
+      (click)="exportExcel()"
+    >
+      <i class="fa fa-file me-1"></i>
+      Export to Excel
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary ml-2"
+      [disabled]="isSubmitting || savedEntries.length === 0"
+      (click)="thermalPrint.printThermalReceipt()"
+    >
+      <i class="fa fa-print me-1"></i>
+      Thermal Print
+    </button>
+
+    <app-thermal-print [savedEntries]="savedEntries"> </app-thermal-print>
+
+    <button
+      type="button"
+      class="btn btn-primary ml-2"
+      [disabled]="isSubmitting || savedEntries.length === 0"
+      (click)="submitEntries()"
+    >
+      <i class="fa fa-check me-1"></i>
+      Submit Entry
+    </button>
+  </div>
+</div>

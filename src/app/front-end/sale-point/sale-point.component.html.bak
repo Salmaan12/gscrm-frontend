@@ -1,0 +1,1041 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <h5 class="mb-0">Sale Point</h5>
+          </div>
+
+          <span class="badge bg-warning text-dark">
+            Pending Entries: {{ savedEntries.length }}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <form
+            class="theme-form"
+            [formGroup]="transactionForm"
+            (ngSubmit)="saveEntry()"
+          >
+            <div class="mb-3">
+              <h6 class="border-bottom pb-2">Transaction Information</h6>
+            </div>
+
+            <div class="row">
+              <!-- CREATED DATE -->
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="createdDate">
+                  Created Date
+                </label>
+
+                <input
+                  class="form-control"
+                  id="createdDate"
+                  type="date"
+                  formControlName="createdDate"
+                  placeholder="Created Date"
+                  readonly
+                />
+              </div>
+
+              <!-- CREATED TIME -->
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="createdTime">
+                  Created Time
+                </label>
+
+                <input
+                  class="form-control"
+                  id="createdTime"
+                  type="text"
+                  formControlName="createdTime"
+                  placeholder="Created Time"
+                  readonly
+                />
+              </div>
+
+              <!-- REFERENCE NUMBER -->
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="referenceNo">
+                  Reference No.
+                </label>
+
+                <input
+                  class="form-control"
+                  id="referenceNo"
+                  type="text"
+                  formControlName="referenceNo"
+                  placeholder="Reference No."
+                  readonly
+                />
+              </div>
+
+              <!-- CUSTOMER -->
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="customerId">
+                  Customer
+                  <sup class="astrik">*</sup>
+                </label>
+
+                <ng-select
+                  id="customerId"
+                  formControlName="customerId"
+                  [items]="customers"
+                  bindLabel="name"
+                  bindValue="id"
+                  placeholder="Select Customer"
+                >
+                  <ng-option ngValue="null">Select Customer</ng-option>
+                </ng-select>
+              </div>
+
+              <!-- TRANSACTION CATEGORY -->
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0 d-block">
+                  Transaction Category
+                  <sup class="astrik">*</sup>
+                </label>
+
+                <div class="transaction-category">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    id="transactionReceived"
+                    value="RECEIVED"
+                    formControlName="transactionCategory"
+                  />
+
+                  <label
+                    class="category-item received"
+                    for="transactionReceived"
+                  >
+                    <i class="fa fa-arrow-down"></i>
+                    RECEIVED
+                  </label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    id="transactionGiven"
+                    value="GIVEN"
+                    formControlName="transactionCategory"
+                  />
+
+                  <label class="category-item given" for="transactionGiven">
+                    <i class="fa fa-arrow-up"></i>
+                    GIVEN
+                  </label>
+                </div>
+              </div>
+
+              <!-- PRODUCT TYPE -->
+              <div class="form-group col-sm-12">
+                <label class="col-form-label pt-0 d-block">
+                  Product Type
+                  <sup class="astrik">*</sup>
+                </label>
+
+                <div class="product-type-group">
+                  <ng-container *ngFor="let product of products">
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      [id]="'productType_' + product.id"
+                      [value]="product.name"
+                      formControlName="productType"
+                      (change)="onProductChange(product.name)"
+                    />
+
+                    <label
+                      class="product-type-item"
+                      [for]="'productType_' + product.id"
+                    >
+                      {{ product.name }}
+                    </label>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0">
+                  Transaction Category
+                  <sup class="astrik">*</sup>
+                </label>
+
+                <ng-select
+                  [items]="['RECEIVED', 'GIVEN']"
+                  placeholder="Select Transaction Category"
+                  formControlName="transactionCategory"
+                >
+                <ng-option ngValue="null">Select Transaction Category</ng-option>
+                </ng-select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="productType">
+                  Product Type
+                  <sup class="astrik">*</sup>
+                </label>
+
+                <ng-select
+                  id="productType"
+                  formControlName="productType"
+                  [items]="productTypes"
+                  bindLabel="name"
+                  bindValue="name"
+                  placeholder="Select Product Type"
+                  (change)="onProductChange($event)"
+                >
+                <ng-option ngValue="null">Select Product Type</ng-option>
+                </ng-select>
+              </div> -->
+            </div>
+
+            <!-- =================================================
+                 PRODUCT DETAILS
+            ================================================== -->
+
+            <div class="mt-3 mb-3" *ngIf="productType">
+              <h6 class="border-bottom pb-2">
+                {{ productType || "Product" }} Details
+              </h6>
+            </div>
+
+            <!-- =================================================
+                 CASH
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'Cash'">
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0"> Currency </label>
+
+                <select class="form-control" formControlName="cashCurrency">
+                  <option [ngValue]="null" disabled>Select Currency</option>
+
+                  <option value="PKR">PKR</option>
+
+                  <option value="USD">USD</option>
+
+                  <option value="AED">AED</option>
+                </select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-4">
+                <label class="col-form-label pt-0" for="cashAmount">
+                  Amount
+                </label>
+
+                <input
+                  class="form-control"
+                  id="cashAmount"
+                  type="number"
+                  formControlName="cashAmount"
+                  placeholder="Enter Amount"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 PC
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'PC'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Brand </label>
+
+                <ng-select
+                  formControlName="pcBrandId"
+                  [items]="filteredBrands"
+                  bindLabel="name"
+                  bindValue="id"
+                  placeholder="Select Brand"
+                  (change)="onBrandChange($any($event.target).value)"
+                >
+                  <ng-option value="">Select Brand</ng-option>
+                </ng-select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Qty </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="pcQty"
+                  placeholder="Qty"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="pcWeight"
+                  placeholder="Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Diff </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="pcDiff"
+                  placeholder="Diff"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Diff Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="pcDiffAmount"
+                  placeholder="Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="pcTotalWeight"
+                  placeholder="Total Weight"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 LAB
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'LAB'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Report </label>
+
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="labReport"
+                  placeholder="Report"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labWeight"
+                  placeholder="Enter Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Pure Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labPureWeight"
+                  placeholder="Enter Pure Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Diff </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labDiff"
+                  placeholder="Enter Diff"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Diff Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labDiffAmount"
+                  placeholder="Enter Diff Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labTotalAmount"
+                  placeholder="Enter Total Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Testing Fee (P/W) </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labTestingFeePW"
+                  placeholder="Enter Testing Fee (P/W)"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Testing Fee (O/A) </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labTestingFeeOA"
+                  placeholder="Enter Testing Fee (O/A)"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Qty </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="labQty"
+                  placeholder="Enter Qty"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 BAR
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'Bar'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Bar Brand </label>
+
+                <select class="form-control" formControlName="barBrand">
+                  <option [ngValue]="null">Select Brand</option>
+
+                  <option value="Brand A">Brand A</option>
+
+                  <option value="Brand B">Brand B</option>
+                </select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Bar Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barWeight"
+                  placeholder="Enter Bar Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Qty </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barQty"
+                  placeholder="Enter Qty"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Making </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barMaking"
+                  placeholder="Enter Making"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Diff </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barDiff"
+                  placeholder="Enter Diff"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Making </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barTotalMaking"
+                  placeholder="Enter Total Making"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barTotalWeight"
+                  placeholder="Enter Total Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barTotalAmount"
+                  placeholder="Enter Total Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Discount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="barDiscount"
+                  placeholder="Enter Discount"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 COIN
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'Coin'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Coin Brand </label>
+
+                <select class="form-control" formControlName="coinBrand">
+                  <option [ngValue]="null">Select Brand</option>
+
+                  <option value="Brand A">Brand A</option>
+
+                  <option value="Brand B">Brand B</option>
+                </select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Coin Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinWeight"
+                  placeholder="Enter Coin Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Qty </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinQty"
+                  placeholder="Enter Qty"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Making </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinMaking"
+                  placeholder="Enter Making"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Diff </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinDiff"
+                  placeholder="Enter Diff"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinTotalAmount"
+                  placeholder="Enter Total Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinTotalWeight"
+                  placeholder="Enter Total Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Karat </label>
+
+                <select class="form-control" formControlName="coinKarat">
+                  <option [ngValue]="null" disabled>Select Karat</option>
+
+                  <option value="24K">24K</option>
+
+                  <option value="22K">22K</option>
+
+                  <option value="21K">21K</option>
+                </select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Pure Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="coinPureWeight"
+                  placeholder="Enter Pure Weight"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 GINNI
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'Ginni'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Ginni Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniWeight"
+                  placeholder="Enter Ginni Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Refine Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniRefineAmount"
+                  placeholder="Enter Refine Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Refining Charges </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniRefiningCharges"
+                  placeholder="Enter Refining Charges"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Report </label>
+
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="ginniReport"
+                  placeholder="Enter Report"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Pure Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniPureWeight"
+                  placeholder="Enter Pure Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniTotalAmount"
+                  placeholder="Enter Total Amount"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="ginniTotalWeight"
+                  placeholder="Enter Total Weight"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 SILVER
+            ================================================== -->
+
+            <div class="row" *ngIf="productType === 'Silver'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Bar Brand </label>
+
+                <select class="form-control" formControlName="silverBarBrand">
+                  <option [ngValue]="null">Select Brand</option>
+
+                  <option value="Brand A">Brand A</option>
+
+                  <option value="Brand B">Brand B</option>
+                </select>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Bar Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverBarWeight"
+                  placeholder="Enter Bar Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Rawal Rod </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverRawalRod"
+                  placeholder="Enter Rawal Rod"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-2">
+                <label class="col-form-label pt-0"> Qty </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverQty"
+                  placeholder="Enter Qty"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Making / Unit </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverMakingPerUnit"
+                  placeholder="Enter Making / Unit"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Weight </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverTotalWeight"
+                  placeholder="Enter Total Weight"
+                />
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label class="col-form-label pt-0"> Total Amount </label>
+
+                <input
+                  class="form-control"
+                  type="number"
+                  formControlName="silverTotalAmount"
+                  placeholder="Enter Total Amount"
+                />
+              </div>
+            </div>
+
+            <!-- =================================================
+                 SAVE ENTRY
+            ================================================== -->
+
+            <div class="text-end mt-3">
+              <button type="submit" class="btn btn-primary me-1">
+                <i class="fa fa-save"></i>
+                Save Entry
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- =====================================================
+           CUSTOMER LEDGER
+      ====================================================== -->
+
+      <div class="card mt-3">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Customer Ledger</h5>
+
+          <span *ngIf="selectedCustomer" class="text-muted">
+            Customer:
+            <strong>
+              {{ selectedCustomer?.name }}
+            </strong>
+          </span>
+        </div>
+
+        <div class="card-body p-0">
+          <!-- ================================================
+               SUMMARY
+          ================================================= -->
+
+          <!-- <div class="row" *ngIf="savedEntries.length > 0">
+            <div class="col-md-4 border-end p-3">
+              <small class="text-muted d-block"> Total Received </small>
+
+              <strong class="text-success">
+                {{ totalReceived | number: "1.2-2" }}
+              </strong>
+            </div>
+
+            <div class="col-md-4 border-end p-3">
+              <small class="text-muted d-block"> Total Given </small>
+
+              <strong class="text-danger">
+                {{ totalGiven | number: "1.2-2" }}
+              </strong>
+            </div>
+
+            <div class="col-md-4 p-3">
+              <small class="text-muted d-block"> Balance </small>
+
+              <strong>
+                {{ balance | number: "1.2-2" }}
+              </strong>
+            </div>
+          </div> -->
+
+          <!-- ================================================
+               EMPTY
+          ================================================= -->
+
+          <div
+            *ngIf="savedEntries.length === 0"
+            class="text-center text-muted p-5"
+          >
+            <i class="fa fa-file-text-o fa-2x mb-2"></i>
+
+            <p class="mb-0">No saved entries.</p>
+
+            <small> Saved transactions will appear here. </small>
+          </div>
+
+          <!-- ================================================
+               TABLE
+          ================================================= -->
+
+          <div class="table-responsive" *ngIf="savedEntries.length > 0">
+            <table class="table table-hover table-bordered mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Reference No.</th>
+                  <th>Customer</th>
+                  <th>Category</th>
+                  <th>Product</th>
+                  <th>Weight</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let entry of savedEntries; let i = index">
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+
+                  <td>
+                    {{ entry.createdDate }}
+
+                    <small class="d-block text-muted">
+                      {{ entry.createdTime }}
+                    </small>
+                  </td>
+
+                  <td>
+                    <span class="text-primary">
+                      {{ entry.referenceNo }}
+                    </span>
+                  </td>
+
+                  <td>
+                    {{ entry.customerName }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="badge"
+                      [class.bg-success]="
+                        entry.transactionCategory === 'RECEIVED'
+                      "
+                      [class.bg-danger]="entry.transactionCategory === 'GIVEN'"
+                    >
+                      {{ entry.transactionCategory }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="badge bg-secondary">
+                      {{ entry.productType }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span *ngIf="entry.weight > 0">
+                      {{ entry.weight | number: "1.2-3" }}
+                      g
+                    </span>
+
+                    <span *ngIf="entry.weight === 0" class="text-muted">
+                      -
+                    </span>
+                  </td>
+
+                  <td>
+                    <span *ngIf="entry.amount > 0">
+                      {{ entry.amount | number: "1.2-2" }}
+                    </span>
+
+                    <span *ngIf="entry.amount === 0" class="text-muted">
+                      -
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="badge bg-warning text-dark"> Pending </span>
+                  </td>
+
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      title="Remove"
+                      (click)="removeEntry(entry.localId)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">Total Balance</td>
+                  <td>{{ weightBalance | number: "1.2-2" }}</td>
+                  <td>{{ balance | number: "1.2-2" }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- =================================================
+             SUBMIT FOOTER
+        ================================================== -->
+
+        <div
+          class="card-footer d-flex justify-content-between align-items-center"
+          *ngIf="savedEntries.length > 0"
+        >
+          <!-- <div>
+            <strong>
+              {{ savedEntries.length }}
+            </strong>
+
+            entries ready for submission.
+
+            <small class="d-block text-muted">
+              Submit will send all saved entries to the API.
+            </small>
+          </div> -->
+
+          <button type="button" class="btn btn-secondary me-2">
+            <i class="fa fa-print"></i>
+            Thermal Print
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-success"
+            [disabled]="isSubmitting"
+            (click)="submitEntries()"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>
+
+            <i *ngIf="!isSubmitting" class="fa fa-cloud-upload"></i>
+
+            {{ isSubmitting ? "Submitting..." : "Submit" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<!-- page-wrapper Start-->
+<div [ngClass]="layout.config.settings.layout_type" [class]="layout.config.settings.layout_version">
+  <div class="page-wrapper" id="canvas-bookmark" [ngClass]="layoutClass">
+    <app-header></app-header>
+    <!-- Page Body Start-->
+    <div class="page-body-wrapper">
+      <div class="sidebar-wrapper" [attr.sidebar-layout]="layout.config.settings.sidebar_type"
+        [class.close_icon]="navServices.collapseSidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div class="page-body">
+        <main [@fadeInAnimation]="getRouterOutletState(o)">
+          <div class="w-100 mb-5"></div>
+          <router-outlet #o="outlet"></router-outlet>
+          <!-- <div id="circularMenu" class="circular-menu">
+
+            <a class="floating-btn" onclick="document.getElementById('circularMenu').classList.toggle('active');">
+              <i class="fa fa-plus"></i>
+            </a>
+
+            <menu>
+              <a class="menu-item fa fa-tasks" [routerLink]="['/task/view_task']" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="top" title="Task List"></a>
+              <a class="menu-item fa fa-calendar-alt" [routerLink]="['/calendar/calendar']" routerLinkActive="router-link-active" data-toggle="tooltip" data-placement="top" title="Calendar"></a>
+              <a class="menu-item fa fa-google-plus"></a>
+              <a class="menu-item fa fa-linkedin"></a>
+            </menu>
+
+          </div> -->
+        </main>
+      </div>
+
+
+    </div>
+
+    <!-- Page Body End-->
+  </div>
+</div>
+<!-- page-wrapper End-->

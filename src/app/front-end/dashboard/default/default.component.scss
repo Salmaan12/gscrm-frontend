@@ -1,0 +1,179 @@
+.modal-header {
+  display: block;
+}
+
+.balanceDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+// .serviceCard{
+//   height: auto;
+//   overflow: auto;
+//   // tr{
+//   //   td{
+//   //     font-size: 13px;
+//   //   }
+//   // }
+// }
+// .profile-greeting {
+//   background-image: none;
+//   background-color: rgb(43 43 43 / 70%);
+// }
+
+// // .card-header{
+// //   &.serviceCardHeader {
+// //     padding-bottom: unset;
+// //   }
+// // }
+
+// // .card-body{
+// //   &.serviceCard {
+// //     padding-top: unset;
+// //   }
+// // }
+
+// // td.digits{
+// //   text-align: center;
+// // }
+
+// // .right-chart-content{
+// //   &.pointer {
+// //     a {
+// //       h4{
+// //         color: #fdfdfd;
+// //       }
+// //     }
+// //   }
+// // }
+
+.marginTopForNav {
+  max-width: 1420px;
+}
+
+.token-paragraph {
+  overflow: auto;
+  word-break: break-word;
+}
+
+.insurance {
+  background-color: #05617b;
+}
+
+.balanceSection {
+  padding: 25px;
+}
+
+.modal-btn {
+  height: 40px;
+  width: 40px;
+  background: #00307a;
+  border-radius: 50%;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.modal-btn img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top: 12px;
+}
+
+.modal-btn2 {
+  height: 40px;
+  width: 40px;
+  background: #c4c4c4;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.modal-btn2 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top: 12px;
+}
+
+.row2-data-remaining {
+  height: 230px;
+  background-color: #05617b;
+  border-radius: 6px;
+  padding: 30px;
+}
+
+.row2-sim {
+  height: 230px;
+  background-color: #00307a;
+  border-radius: 6px;
+  padding: 3px;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%, 0% 50%);
+}
+
+.sim-btn {
+  width: 60%;
+  background-color: #01db5d;
+  border-radius: 43px;
+  color: white;
+  height: 33px;
+}
+
+.sim-online {
+  padding-left: 2rem;
+}
+
+.sim-online-btn {
+  background-color: #01db5d;
+  width: 90px;
+  border-radius: 43px;
+  height: 30px;
+  color: white;
+}
+
+i.fa.fa-plus {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
+#getUsername {
+  text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+  .balanceSection {
+    padding: 10px 0px;
+  }
+  .row2-sim {
+    height: 240px;
+    clip-path: polygon(0 0, 100% 0, 100% 75%, 88% 100%, 0 100%, 0% 50%);
+  }
+  .sim-btn {
+    width: 90%;
+    height: 34px;
+  }
+}
+
+.StripeElementStyle {
+  width: 66%;
+  padding: 13px;
+  margin-top: 20px;
+  border: 1px solid;
+  border-radius: 11px;
+}
+
+@media (max-width: 768px) {
+  .StripeElementStyle {
+    width: 85vw;
+    padding: 8px;
+    margin-top: 20px;
+    border: 1px solid;
+    border-radius: 11px;
+    position: relative;
+    left: -34px;
+  }
+}

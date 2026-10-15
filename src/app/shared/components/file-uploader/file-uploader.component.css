@@ -1,0 +1,26 @@
+.file-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.preview-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 5px;
+  background-color: azure;
+  margin-right: 2;
+}
+
+.file-name-input {
+  flex: 1;
+  height: 38px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}

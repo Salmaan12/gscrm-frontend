@@ -1,0 +1,252 @@
+[
+  {
+    "id": 1,
+    "canEdit": true,
+    "path": "/dashboard/default",
+    "title": "Dashboard",
+    "icon": "menu",
+    "type": "link",
+    "bookmark": true,
+    "active": false
+  },
+  {
+    "id": 2,
+    "canEdit": true,
+    "title": "Plan",
+    "icon": "home",
+    "type": "sub",
+    "bookmark": true,
+    "badgeType": "success",
+    "badgeValue": "1",
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/plan/add_plan",
+        "title": "Change eSIM Plans Price",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "canEdit": true,
+    "path": "/coupon/create_coupons",
+    "title": "Coupons",
+    "icon": "tag",
+    "type": "link",
+    "bookmark": true
+  },
+  {
+    "id": 4,
+    "canEdit": true,
+    "path": "/purchase-esim/purchase",
+    "title": "Purchase eSIM",
+    "icon": "shopping-cart",
+    "type": "link",
+    "bookmark": true
+  },
+  {
+    "id": 5,
+    "canEdit": true,
+    "title": "Recharge eSIM",
+    "path": "/recharge-esim/recharge",
+    "icon": "sunset",
+    "type": "link",
+    "bookmark": true
+  },
+  {
+    "id": 6,
+    "canEdit": true,
+    "title": "Activate eSIM",
+    "icon": "sunrise",
+    "type": "sub",
+    "active": false,
+    "bookmark": true,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/activate-esim/activate",
+        "title": "eSIM",
+        "type": "link"
+      },
+      {
+        "id": 2,
+        "canEdit": true,
+        "path": "/activate-esim/list",
+        "title": "List",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "canEdit": true,
+    "title": "Orders",
+    "icon": "shopping-cart",
+    "type": "sub",
+    "bookmark": true,
+    "badgeType": "success",
+    "badgeValue": "2",
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/order/eSim",
+        "title": "eSIM",
+        "type": "link"
+      },
+      {
+        "id": 2,
+        "canEdit": true,
+        "path": "/order/topup",
+        "title": "Topup",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "canEdit": true,
+    "title": "Customer",
+    "icon": "user",
+    "type": "sub",
+    "bookmark": true,
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/customer/customer-list",
+        "title": "List",
+        "type": "link"
+      },
+      {
+        "id": 2,
+        "canEdit": true,
+        "path": "/customer/refund-request",
+        "title": "Refund request",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "canEdit": true,
+    "title": "Agents",
+    "icon": "users",
+    "type": "sub",
+    "bookmark": true,
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/agents",
+        "title": "List",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "canEdit": true,
+    "title": "Reports",
+    "path": "reports",
+    "icon": "book",
+    "type": "sub",
+    "bookmark": true,
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/report/accounting",
+        "title": "Accounting",
+        "type": "link"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "canEdit": true,
+    "title": "Settings",
+    "icon": "settings",
+    "type": "sub",
+    "badgeType": "success",
+    "badgeValue": "6",
+    "active": false,
+    "children": [
+      {
+        "id": 1,
+        "canEdit": true,
+        "path": "/setting/general-settings",
+        "title": "General Settings",
+        "type": "link"
+      },
+      {
+        "id": 2,
+        "canEdit": true,
+        "path": "/setting/wallet-history",
+        "title": "Wallet History",
+        "type": "link"
+      },
+      {
+        "id": 3,
+        "canEdit": true,
+        "path": "/contact/user",
+        "title": "Contact",
+        "icon": "home",
+        "type": "link",
+        "bookmark": true
+      },
+      {
+        "id": 4,
+        "canEdit": true,
+        "path": "/contact/partner",
+        "title": "Affiliate",
+        "icon": "home",
+        "type": "link",
+        "bookmark": true
+      },
+      {
+        "id": 5,
+        "canEdit": true,
+        "path": "/faq/add_faq",
+        "title": "FAQ",
+        "type": "link"
+      },
+      {
+        "id": 6,
+        "canEdit": true,
+        "path": "/setting/emails",
+        "title": "Email",
+        "type": "link"
+      },
+      {
+        "id": 7,
+        "canEdit": true,
+        "path": "/setting/mobile_device",
+        "title": "Add Mobile Device",
+        "type": "link"
+      },
+      {
+        "id": 8,
+        "canEdit": true,
+        "path": "/setting/roles",
+        "title": "Roles",
+        "type": "link"
+      },
+      {
+        "id": 9,
+        "canEdit": true,
+        "path": "/setting/users",
+        "title": "Users",
+        "type": "link"
+      }
+    ]
+  }
+]

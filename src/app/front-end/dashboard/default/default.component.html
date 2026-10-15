@@ -1,0 +1,445 @@
+<div class="container-fluid marginTopForNav">
+  <ngx-ui-loader [loaderId]="'loader-02'" fgsType="folding-cube"></ngx-ui-loader>
+  <ngx-ui-loader [loaderId]="'loader-03'" fgsType="folding-cube"></ngx-ui-loader>
+  <div class="row">
+    <div class="col-md-12 mb-2">
+      <h2 style="font-weight: bold">
+        Hello, <span id="getUsername">{{ WLuserName }}</span>
+      </h2>
+    </div>
+    <!-- <div style="background-color: #05617b; border-radius: 6px" class="col-md-4 text-white">
+      <div class="balanceDiv">
+        <div class="balanceSection">
+          <h5>My balance</h5>
+          <h2 style="font-weight: 700">
+            $ <span id="getBalance">{{ WLuserBalance }}</span>
+          </h2>
+        </div>
+        <div *ngIf="canEdit">
+          <a class="pointer text-white" [href]="'https://roambuddy.africa/partner/#/auth/login'" target="_blank">add
+            balance</a>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div class="col-md-8">
+      <div class="d-flex flex-column d-sm-flex flex-sm-row justify-content-end">
+        <a class="pointer" (click)="openModal('topup')">
+          <div style="background-color: #01DB5D; position: relative;border-radius: 6px;" class="m-3 p-4">
+            <div style=" position: absolute; top: 26px; left: -25px; ">
+              <div class="modal-btn">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </div>
+
+            </div>
+            <p style="color: #000;">Add balance</p>
+          </div>
+        </a>
+        <a class="pointer" (click)="recharge_esim()">
+          <div style="background-color: #CADFFF; position: relative;border-radius: 6px;" class="m-3 p-4">
+            <div style=" position: absolute; top: 26px; left: -25px; ">
+            </div>
+            <p style="color: #000;">Recharge E-SIM</p>
+          </div>
+        </a>
+        <a class="pointer" (click)="scrollToSection()">
+          <div style="background-color: #CADFFF; position: relative;border-radius: 6px;" class="m-3 p-4">
+            <div style=" position: absolute; top: 26px; left: -25px; ">
+            </div>
+            <p style="color: #000;">Buy Plan</p>
+          </div>
+        </a>
+        <a class="pointer" (click)="getUserOrderHistory()">
+          <div style="background-color: #CADFFF; position: relative;border-radius: 6px;" class="m-3 p-4">
+            <div style=" position: absolute; top: 26px; left: -25px; ">
+            </div>
+            <p style="color: #000;">Past orders</p>
+          </div>
+        </a>
+      </div>
+    </div> -->
+    <div class="col-md-12 mt-5" *ngIf="merchantPurchaseRecord.length != 0">
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h5>List of Assign eSIM To WL User</h5>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group m-0">
+                <input type="search" placeholder="Search.." #value [(ngModel)]="search" class="form-control" />
+              </div>
+            </div>
+            <!-- <div class="form-group col-sm-6 mt-2">
+              <label class="col-form-label pt-0" for="roleSelect">Select User</label>
+              <ng-select placeholder="select" name="" [items]="allUserList" bindLabel="userName" bindValue="id"
+                [(ngModel)]="userId" [ngModelOptions]="{standalone:true}" (change)="getPlanByUserID()">
+              </ng-select>
+            </div> -->
+          </div>
+        </div>
+        <div class="card-body p-0" style="position: relative">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">OrderID</th>
+                  <th scope="col">Plan Name</th>
+                  <th scope="col">ICC ID</th>
+                  <th scope="col">Order Status</th>
+                  <th scope="col">Email</th>
+                  <!-- <th colspan="2">Action</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="
+                    let item of merchantPurchaseRecord | filter : search;
+                    let i = index
+                  ">
+                  <th scope="row">{{ i + 1 }}</th>
+                  <td class="pointer" (click)="orderHistoryModal(item.orderId, item.plan?.iccid)">
+                    {{ item.orderId }}
+                  </td>
+                  <td>{{ item.plan?.name }}</td>
+                  <td>{{ item.plan?.iccid }}</td>
+                  <td>{{ item.orderStatus }}</td>
+                  <td>{{ item.email }}</td>
+                  <!-- <td><i class="fa fa-edit" (click)="setValue(item)"></i></td> -->
+                  <!-- <td><i class="fa fa-trash" (click)="deleteItem(item.id)"></i></td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================= STATS ================================= -->
+
+    <div class="col-xl-12 xl-100 chart_data_left box-col-12 mt-5">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="row m-0 chart-main">
+            <!-- (click)="route('plan')" -->
+            <div class="col-xl-3 col-md-6 col-sm-6 p-0 box-col-6 pointer"
+              *ngFor="let plan of plansStatics; let i = index">
+              <div class="media align-items-center">
+                <div class="hospital-small-chart">
+                  <div class="small-bar">
+                    <div class="small-chart" *ngIf="isDivisibleByTwo(i)">
+                      <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%"
+                        class="ct-chart-bar" style="width: 100%; height: 100%">
+                        <g class="ct-grids"></g>
+                        <g>
+                          <g class="ct-series ct-series-a">
+                            <line x1="13.571428571428571" x2="13.571428571428571" y1="69" y2="58.2" class="ct-bar"
+                              ct:value="400" style="stroke-width: 3px"></line>
+                            <line x1="20.714285714285715" x2="20.714285714285715" y1="69" y2="44.7" class="ct-bar"
+                              ct:value="900" style="stroke-width: 3px"></line>
+                            <line x1="27.857142857142858" x2="27.857142857142858" y1="69" y2="47.4" class="ct-bar"
+                              ct:value="800" style="stroke-width: 3px"></line>
+                            <line x1="35" x2="35" y1="69" y2="42" class="ct-bar" ct:value="1000"
+                              style="stroke-width: 3px"></line>
+                            <line x1="42.14285714285714" x2="42.14285714285714" y1="69" y2="50.1" class="ct-bar"
+                              ct:value="700" style="stroke-width: 3px"></line>
+                            <line x1="49.285714285714285" x2="49.285714285714285" y1="69" y2="36.6" class="ct-bar"
+                              ct:value="1200" style="stroke-width: 3px"></line>
+                            <line x1="56.42857142857143" x2="56.42857142857143" y1="69" y2="60.9" class="ct-bar"
+                              ct:value="300" style="stroke-width: 3px"></line>
+                          </g>
+                          <g class="ct-series ct-series-b">
+                            <line x1="13.571428571428571" x2="13.571428571428571" y1="58.2" y2="31.200000000000003"
+                              class="ct-bar" ct:value="1000" style="stroke-width: 3px"></line>
+                            <line x1="20.714285714285715" x2="20.714285714285715" y1="44.7" y2="31.200000000000003"
+                              class="ct-bar" ct:value="500" style="stroke-width: 3px"></line>
+                            <line x1="27.857142857142858" x2="27.857142857142858" y1="47.4" y2="31.199999999999996"
+                              class="ct-bar" ct:value="600" style="stroke-width: 3px"></line>
+                            <line x1="35" x2="35" y1="42" y2="31.200000000000003" class="ct-bar" ct:value="400"
+                              style="stroke-width: 3px"></line>
+                            <line x1="42.14285714285714" x2="42.14285714285714" y1="50.1" y2="31.200000000000003"
+                              class="ct-bar" ct:value="700" style="stroke-width: 3px"></line>
+                            <line x1="49.285714285714285" x2="49.285714285714285" y1="36.6" y2="31.200000000000003"
+                              class="ct-bar" ct:value="200" style="stroke-width: 3px"></line>
+                            <line x1="56.42857142857143" x2="56.42857142857143" y1="60.9" y2="31.199999999999996"
+                              class="ct-bar" ct:value="1100" style="stroke-width: 3px"></line>
+                          </g>
+                        </g>
+                        <g class="ct-labels"></g>
+                      </svg>
+                    </div>
+
+                    <div class="small-chart1" *ngIf="isDivisibleByTwo(i) === false">
+                      <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%"
+                        class="ct-chart-bar" style="width: 100%; height: 100%">
+                        <g class="ct-grids"></g>
+                        <g>
+                          <g class="ct-series ct-series-a">
+                            <line x1="13.571428571428571" x2="13.571428571428571" y1="69" y2="58.2" class="ct-bar"
+                              ct:value="400" style="stroke-width: 3px"></line>
+                            <line x1="20.714285714285715" x2="20.714285714285715" y1="69" y2="44.7" class="ct-bar"
+                              ct:value="900" style="stroke-width: 3px"></line>
+                            <line x1="27.857142857142858" x2="27.857142857142858" y1="69" y2="47.4" class="ct-bar"
+                              ct:value="800" style="stroke-width: 3px"></line>
+                            <line x1="35" x2="35" y1="69" y2="42" class="ct-bar" ct:value="1000"
+                              style="stroke-width: 3px"></line>
+                            <line x1="42.14285714285714" x2="42.14285714285714" y1="69" y2="50.1" class="ct-bar"
+                              ct:value="700" style="stroke-width: 3px"></line>
+                            <line x1="49.285714285714285" x2="49.285714285714285" y1="69" y2="36.6" class="ct-bar"
+                              ct:value="1200" style="stroke-width: 3px"></line>
+                            <line x1="56.42857142857143" x2="56.42857142857143" y1="69" y2="60.9" class="ct-bar"
+                              ct:value="300" style="stroke-width: 3px"></line>
+                          </g>
+                          <g class="ct-series ct-series-b">
+                            <line x1="13.571428571428571" x2="13.571428571428571" y1="58.2" y2="31.200000000000003"
+                              class="ct-bar" ct:value="1000" style="stroke-width: 3px"></line>
+                            <line x1="20.714285714285715" x2="20.714285714285715" y1="44.7" y2="31.200000000000003"
+                              class="ct-bar" ct:value="500" style="stroke-width: 3px"></line>
+                            <line x1="27.857142857142858" x2="27.857142857142858" y1="47.4" y2="31.199999999999996"
+                              class="ct-bar" ct:value="600" style="stroke-width: 3px"></line>
+                            <line x1="35" x2="35" y1="42" y2="31.200000000000003" class="ct-bar" ct:value="400"
+                              style="stroke-width: 3px"></line>
+                            <line x1="42.14285714285714" x2="42.14285714285714" y1="50.1" y2="31.200000000000003"
+                              class="ct-bar" ct:value="700" style="stroke-width: 3px"></line>
+                            <line x1="49.285714285714285" x2="49.285714285714285" y1="36.6" y2="31.200000000000003"
+                              class="ct-bar" ct:value="200" style="stroke-width: 3px"></line>
+                            <line x1="56.42857142857143" x2="56.42857142857143" y1="60.9" y2="31.199999999999996"
+                              class="ct-bar" ct:value="1100" style="stroke-width: 3px"></line>
+                          </g>
+                        </g>
+                        <g class="ct-labels"></g>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="right-chart-content" style="white-space: nowrap;">
+                    <h4>{{ plan?.value }}</h4>
+                    <span>{{ plan?.title | titlecase }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div
+              class="col-xl-3 col-md-6 col-sm-6 p-0 box-col-6 pointer"
+              (click)="route('complete-order')"
+            >
+              <div class="media align-items-center">
+                <div class="hospital-small-chart">
+                  <div class="small-bar">
+                    <div class="small-chart1">
+                     <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%" class="ct-chart-bar" style="width: 100%; height: 100%;"><g class="ct-grids"></g><g><g class="ct-series ct-series-a"><line x1="13.571428571428571" x2="13.571428571428571" y1="69" y2="58.2" class="ct-bar" ct:value="400" style="stroke-width: 3px"></line><line x1="20.714285714285715" x2="20.714285714285715" y1="69" y2="44.7" class="ct-bar" ct:value="900" style="stroke-width: 3px"></line><line x1="27.857142857142858" x2="27.857142857142858" y1="69" y2="47.4" class="ct-bar" ct:value="800" style="stroke-width: 3px"></line><line x1="35" x2="35" y1="69" y2="42" class="ct-bar" ct:value="1000" style="stroke-width: 3px"></line><line x1="42.14285714285714" x2="42.14285714285714" y1="69" y2="50.1" class="ct-bar" ct:value="700" style="stroke-width: 3px"></line><line x1="49.285714285714285" x2="49.285714285714285" y1="69" y2="36.6" class="ct-bar" ct:value="1200" style="stroke-width: 3px"></line><line x1="56.42857142857143" x2="56.42857142857143" y1="69" y2="60.9" class="ct-bar" ct:value="300" style="stroke-width: 3px"></line></g><g class="ct-series ct-series-b"><line x1="13.571428571428571" x2="13.571428571428571" y1="58.2" y2="31.200000000000003" class="ct-bar" ct:value="1000" style="stroke-width: 3px"></line><line x1="20.714285714285715" x2="20.714285714285715" y1="44.7" y2="31.200000000000003" class="ct-bar" ct:value="500" style="stroke-width: 3px"></line><line x1="27.857142857142858" x2="27.857142857142858" y1="47.4" y2="31.199999999999996" class="ct-bar" ct:value="600" style="stroke-width: 3px"></line><line x1="35" x2="35" y1="42" y2="31.200000000000003" class="ct-bar" ct:value="400" style="stroke-width: 3px"></line><line x1="42.14285714285714" x2="42.14285714285714" y1="50.1" y2="31.200000000000003" class="ct-bar" ct:value="700" style="stroke-width: 3px"></line><line x1="49.285714285714285" x2="49.285714285714285" y1="36.6" y2="31.200000000000003" class="ct-bar" ct:value="200" style="stroke-width: 3px"></line><line x1="56.42857142857143" x2="56.42857142857143" y1="60.9" y2="31.199999999999996" class="ct-bar" ct:value="1100" style="stroke-width: 3px"></line></g></g><g class="ct-labels"></g></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="right-chart-content">
+                    <h4>{{ plansStatics.completedOrders }}</h4>
+                    <span>Complete Orders</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="col-xl-3 col-md-6 col-sm-6 p-0 box-col-6 pointer"
+              (click)="route('pending-order')"
+            >
+              <div class="media align-items-center">
+                <div class="hospital-small-chart">
+                  <div class="small-bar">
+                    <div class="small-chart2">
+                     
+                    </div>
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="right-chart-content">
+                    <h4>{{ plansStatics.pendingOrders }}</h4>
+                    <span>Pending Orders</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="col-xl-3 col-md-6 col-sm-6 p-0 box-col-6 pointer"
+              (click)="route('cancelled-order')"
+            >
+              <div class="media border-none align-items-center">
+                <div class="hospital-small-chart">
+                  <div class="small-bar">
+                    <div class="small-chart3">
+                     
+                    </div>
+                  </div>
+                </div>
+                <div class="media-body">
+                  <div class="right-chart-content">
+                    <h4>{{ plansStatics.cancelOrders }}</h4>
+                    <span>Cancelled Orders</span>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- user order history popup -->
+<ng-template #tokenOpen let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-10">
+          <h4 class="modal-title" id="modal-basic-title">API Token</h4>
+        </div>
+        <div class="col-2">
+          <button type="button" class="close customClose" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <p class="token-paragraph">{{ WLuserToken }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="changePassword()">Save</button>
+  </div> -->
+</ng-template>
+
+<!-- user order history popup -->
+<ng-template #orderHistory let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-10">
+          <h4 class="modal-title" id="modal-basic-title">
+            Transaction SIM Detail
+          </h4>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="close customClose" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="card-body p-0" style="position: relative">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Plan Id</th>
+              <th scope="col">Plan Name</th>
+              <th scope="col">Region</th>
+              <th scope="col">Price</th>
+              <th scope="col">Data</th>
+              <th scope="col">Validity</th>
+              <th scope="col">ICC ID</th>
+              <th scope="col">QR CODE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ simDetailsRecord[0].plan.id }}</td>
+              <td>{{ simDetailsRecord[0].plan.name }}</td>
+              <td>{{ simDetailsRecord[0].plan.region }}</td>
+              <td>{{ simDetailsRecord[0].plan.retailPrice }}</td>
+              <td>{{ simDetailsRecord[0].plan.data }}</td>
+              <td>{{ simDetailsRecord[0].plan.validity }}</td>
+              <td>{{ simDetailsRecord[0].plan.iccid }}</td>
+              <td>
+                <img src="{{ simDetailsRecord[0].qrCode }}" alt="qrcode" width="40%" />
+              </td>
+              <!-- <td><i class="fa fa-edit" (click)="setValue(item)"></i></td> -->
+              <!-- <td><i class="fa fa-trash" (click)="deleteItem(item.id)"></i></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- user order history popup -->
+<!-- <ng-template #recharge_esim_popup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-10">
+          <h4 class="modal-title" id="modal-basic-title">Recharge E-SIM</h4>
+        </div>
+        <div class="col-2">
+          <button type="button" class="close customClose" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <input class="form-check-input" type="radio" value="card" (change)="selectPaymentMethod($event)"
+            name="paymentMethod" id="card" checked>
+          <label class="form-check-label ps-2" for="card">
+            Recharge esim with card
+          </label>
+        </div>
+        <div class="col-md-6">
+          <input class="form-check-input" type="radio" value="wallet" (change)="selectPaymentMethod($event)"
+            name="paymentMethod" id="wallet">
+          <label class="form-check-label ps-2" for="wallet">
+            Recharge esim with wallet
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 py-5" *ngIf="selectMethod == 'card'">
+          <h4>Recharge ESIM with Credit Card</h4>
+          <div class="form">
+            <div class="StripeElementStyle" id="stripeInput">
+
+              <ngx-stripe-card (change)="handleError($event)" #card [options]="cardOptions"
+              [elementsOptions]="elementsOptions">
+            </ngx-stripe-card>
+              <div id="card-errors" style="color:red"></div>
+            </div>
+            <div class="input-group col-12 p-0 mt-5">
+              <label class="input-group-text" for="inputGroupSelect01">Select ESIM GO Bundle</label>
+              <ng-select class="form-select" id="inputGroupSelect01" placeholder="select e-sim" (change)="toggleBundle($event)" [items]="esimgo"
+                bindLabel="name" bindValue="name">
+              </ng-select>
+            </div>
+            <div class="input-group col-12 p-0 mt-5">
+              <label class="input-group-text" for="inputGroupSelect02">ICC ID</label>
+              <input type="text" class="form-control" id="inputGroupSelect02" placeholder="Enter ICC ID Number" [(ngModel)]="iccid"
+                [ngModelOptions]="{standalone:true}">
+            </div>
+            <div class="input-group col-12 p-0 mt-5">
+              <button class="btn btn-success" (click)="proceed()">Recharge ESIM</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="selectMethod == 'wallet'">
+          wallet
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->

@@ -1,0 +1,145 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5>{{ isEditMode ? "Edit User" : "Add New User" }}</h5>
+            </div>
+            <div class="col-md-6 text-end" *ngIf="isEditMode">
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="closeModal()"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="theme-form" [formGroup]="usersForm">
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="userName">Username</label>
+                <input
+                  class="form-control"
+                  id="userName"
+                  formControlName="userName"
+                  placeholder="Enter username"
+                  (input)="removeSpaces()"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="firstName">First Name</label>
+                <input
+                  class="form-control"
+                  id="firstName"
+                  formControlName="firstName"
+                  placeholder="Enter first name"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="lastName">Last Name</label>
+                <input
+                  class="form-control"
+                  id="lastName"
+                  formControlName="lastName"
+                  placeholder="Enter last name"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="fullName">Full Name</label>
+                <input
+                  class="form-control"
+                  id="fullName"
+                  formControlName="fullName"
+                  placeholder="Enter full name"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="Phone">Phone Number</label>
+                <input
+                  class="form-control"
+                  id="Phone"
+                  formControlName="Phone"
+                  placeholder="Enter phone number"
+                />
+              </div>
+
+              <div class="form-group col-md-6" *ngIf="!isEditMode">
+                <label class="col-form-label"
+                  >Password<sup class="astrik">*</sup></label
+                >
+                <input
+                  class="form-control"
+                  [type]="show ? 'text' : 'password'"
+                  formControlName="password"
+                  required=""
+                  placeholder="Password"
+                />
+                <div class="show-hide" (click)="showPassword()" *ngIf="!show">
+                  <span class="show"></span>
+                </div>
+                <div class="show-hide" (click)="showPassword()" *ngIf="show">
+                  <span class="Hide"></span>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                  placeholder="Enter email"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input
+                  class="form-control"
+                  id="dateOfBirth"
+                  formControlName="dateOfBirth"
+                  placeholder="Enter date of birth"
+                  type="date"
+                />
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="isActive">Status</label>
+                <ng-select
+                  [items]="statusOptions"
+                  bindLabel="label"
+                  bindValue="value"
+                  placeholder="Select Status"
+                  formControlName="isActive"
+                  [clearable]="false"
+                >
+                </ng-select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button
+            class="btn btn-primary"
+            (click)="saveUser()"
+            [disabled]="!usersForm.valid"
+          >
+            <ng-container>
+              {{ isEditMode ? "Update User" : "Create User" }}
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,184 @@
+.btnAdd {
+  min-width: 130px;
+  margin-right: 5px;
+  background-color: rgb(146, 60, 157) !important;
+}
+
+table {
+  cursor: pointer;
+}
+
+.container-fluid {
+  color: #7366ff;
+
+  .module-card {
+    border: 1px solid #44475a;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #313342;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #7366ff;
+    margin-bottom: 20px;
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .form-check {
+        .form-check-input {
+          width: 40px;
+          height: 20px;
+          cursor: pointer;
+          appearance: none;
+          background-color: #ccc;
+          border-radius: 20px;
+          position: relative;
+          transition: background-color 0.3s;
+
+          &:checked {
+            background-color: #7366ff;
+          }
+
+          &:checked::before {
+            transform: translateX(20px);
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            top: -2;
+            left: 0;
+            transition: transform 0.3s;
+          }
+        }
+      }
+
+      .clickable {
+        cursor: pointer;
+        flex-grow: 1;
+        color: #d8d8d8;
+      }
+
+      input[type="checkbox"] {
+        margin-left: 8px;
+      }
+    }
+
+    .submodule-container {
+      padding-left: 20px;
+      margin-top: 15px;
+      border-radius: 4px;
+
+      &.with-submodules {
+        padding-left: 20px;
+        margin-top: 15px;
+      }
+
+      &:not(.with-submodules) {
+        padding-left: 0;
+        margin-top: 0;
+      }
+
+      .submodule {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 0;
+        border-bottom: 1px solid #515151;
+
+        &:first-of-type {
+          border-top: none;
+        }
+
+        .small-toggle .form-check-input {
+          margin-left: 1px;
+          width: 30px;
+          height: 15px;
+          cursor: pointer;
+          appearance: none;
+          background-color: #ccc;
+          border-radius: 15px;
+          position: relative;
+          transition: background-color 0.3s;
+
+          &:checked {
+            background-color: #7366ff;
+          }
+
+          &:checked::before {
+            transform: translateX(15px);
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: white;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s;
+          }
+        }
+
+        .submodule-title {
+          flex-grow: 1;
+          color: #d8d8d8;
+        }
+      }
+    }
+  }
+}
+
+.form-check-input {
+  position: relative;
+}
+
+.extra-padding {
+  margin-right: 8px;
+}
+
+.text-color {
+  color: #d8d8d8;
+}
+
+.border-start {
+  border-left: 1px solid #374558;
+}
+
+.table td {
+  vertical-align: middle !important;
+}
+
+.badge-yellow {
+  background-color: #fdf6b2;
+  color: #7d5257;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 10px 15px;
+}
+
+.badge-red {
+  background-color: #fde8e8;
+  color: #9f2f46;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 10px 15px;
+}
+
+.badge-green {
+  background-color: #def7ec;
+  color: #466a58;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 10px 15px;
+}

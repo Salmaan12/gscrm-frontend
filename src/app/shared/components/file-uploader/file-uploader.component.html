@@ -1,0 +1,49 @@
+<label class="col-form-label pt-0" for="name">{{ label }}</label>
+<div class="file-input-container d-flex align-items-center">
+  <!-- Image Preview -->
+  <img
+    *ngIf="filePreview"
+    [src]="filePreview"
+    alt="Preview"
+    class="preview-img"
+  />
+
+  <!-- File Name Input -->
+  <input
+    class="form-control file-name-input"
+    [placeholder]="'File name'"
+    [value]="fileName"
+    readonly
+  />
+
+  <!-- Delete Button -->
+  <button
+    type="button"
+    class="btn icon-btn"
+    (click)="cancelFileSelection()"
+    style="font-size: 18px; padding: 8px"
+  >
+    <i class="fa fa-trash" style="color: #d9534f"></i>
+    <!-- Bootstrap danger color -->
+  </button>
+
+  <!-- Refresh Button -->
+  <button
+    type="button"
+    class="btn icon-btn"
+    (click)="replaceFile()"
+    style="font-size: 18px; padding: 8px"
+  >
+    <i class="fa fa-refresh" style="color: #6f42c1"></i>
+    <!-- Professional purple shade -->
+  </button>
+
+  <!-- Hidden File Input -->
+  <input
+    type="file"
+    accept="image/*"
+    (change)="onFileChange($event)"
+    class="d-none"
+    #fileInput
+  />
+</div>

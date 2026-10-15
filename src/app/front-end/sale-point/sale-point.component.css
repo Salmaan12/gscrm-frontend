@@ -1,0 +1,217 @@
+.astrik {
+  color: red;
+  margin-left: 2px;
+}
+
+.card-header h5 {
+  margin-bottom: 0;
+}
+
+.card-header small {
+  font-size: 12px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.table th {
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.table td {
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+.table .badge {
+  font-size: 11px;
+}
+
+.card-footer {
+  min-height: 65px;
+}
+
+.text-primary {
+  cursor: default;
+}
+
+/* =========================================
+   HIDE RADIO
+   ========================================= */
+
+.btn-check {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
+/* =========================================
+   TRANSACTION CATEGORY
+   ========================================= */
+
+.transaction-category {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.category-item {
+  flex: 1;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px;
+
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+/* Hover */
+
+.category-item:hover {
+  border-color: var(--bs-primary);
+}
+
+
+/* RECEIVED */
+.btn-check:hover + .received {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.btn-check:checked + .received {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+
+/* GIVEN */
+.btn-check:hover + .given {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.btn-check:checked + .given {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+
+/* =========================================
+   PRODUCT TYPE
+   ========================================= */
+
+.product-type-group {
+  display: grid;
+
+  /* 7 items on desktop */
+  grid-template-columns: repeat(7, 1fr);
+
+  width: 100%;
+
+  border: 1px solid var(--bs-border-color);
+  border-radius: 7px;
+
+  overflow: hidden;
+
+  background: var(--bs-body-bg);
+}
+
+
+/* Product option */
+
+.product-type-item {
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  color: var(--bs-body-color);
+  background: transparent;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+/* Remove border from last item */
+
+.product-type-item:last-child {
+  border-right: none;
+}
+
+
+/* Hover */
+
+.product-type-item:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+
+/* Selected */
+
+.btn-check:checked + .product-type-item {
+  background-color: #198754;
+  color: #fff;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 991.98px) {
+
+  .product-type-group {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .product-type-item {
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+}
+
+
+@media (max-width: 575.98px) {
+
+  .transaction-category {
+    flex-direction: column;
+  }
+
+  .product-type-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-type-item {
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+}

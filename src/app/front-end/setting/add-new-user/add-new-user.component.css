@@ -1,0 +1,12 @@
+.btnRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.show-hide {
+    position: absolute;
+    top: unset;
+    right: 60px;
+    transform: translateY(-125%);
+}

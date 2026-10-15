@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mt-2">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h5>{{ isEditMode ? "Edit Customer" : "Add New Customer" }}</h5>
+            </div>
+            <div class="col-md-6 text-end" *ngIf="isEditMode">
+              <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form class="theme-form" [formGroup]="customersForm">
+            <div class="row">
+
+            
+            <div class="form-group col-md-6">
+              <label for="customerName">Customer Name</label>
+              <input class="form-control" id="customerName" formControlName="customerName" placeholder="Enter Customer Name"
+                (input)="removeSpaces()" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="cnic">CNIC</label>
+              <input class="form-control" id="cnic" formControlName="cnic" placeholder="Enter CNIC" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="primaryPhone">Primary Phone Number</label>
+              <input class="form-control" id="primaryPhone" formControlName="primaryPhone" placeholder="Enter Primary Phone Number" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="secondaryPhone">Secondary Phone Number</label>
+              <input class="form-control" id="secondaryPhone" formControlName="secondaryPhone" placeholder="Enter Seconday Phone Number" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="refineCharges">Refine Charges</label>
+              <input class="form-control" id="refineCharges" formControlName="refineCharges" placeholder="Enter Refine Charges" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="diffCharges">Difference Charges</label>
+              <input class="form-control" id="diffCharges" formControlName="diffCharges" placeholder="Enter Difference Charges" />
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="isActive">Status</label>
+              <ng-select [items]="statusOptions" bindLabel="label" bindValue="value" placeholder="Select Status"
+                formControlName="isActive" [clearable]="false">
+              </ng-select>
+            </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+
+          <button class="btn btn-primary" (click)="saveCustomer()" [disabled]="!customersForm.valid">
+            <ng-container>
+              {{ isEditMode ? "Update Customer" : "Create Customer" }}
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
